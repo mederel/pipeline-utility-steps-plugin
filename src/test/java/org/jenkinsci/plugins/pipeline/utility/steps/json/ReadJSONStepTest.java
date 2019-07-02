@@ -38,6 +38,7 @@ import org.jenkinsci.plugins.pipeline.utility.steps.FilenameTestsUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -54,6 +55,9 @@ import net.sf.json.JSONObject;
  * @author Nikolas Falco
  */
 public class ReadJSONStepTest {
+    private static final String RETURN_POJO_PROPERTY_NAME =
+            "org.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo";
+
     private static final String SOME_JSON = "{\"aNullValue\": null,\"tags\": [0, 1, 2, null]}";
 
     @Rule
@@ -61,6 +65,11 @@ public class ReadJSONStepTest {
 
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
+
+    @After
+    public void tearDown() {
+        System.clearProperty(RETURN_POJO_PROPERTY_NAME);
+    }
 
     @Test
     public void readFile() throws Exception {
@@ -219,6 +228,33 @@ public class ReadJSONStepTest {
                         "}", true));
         WorkflowRun run = j.assertBuildStatus(Result.FAILURE, p.scheduleBuild2(0).get());
         j.assertLogContains(Messages.ReadJSONStepExecution_tooManyArguments("readJSON"), run);
+    }
+
+    @Test
+    public void returnPojoActivatedWithSystemProperty() throws Exception {
+        System.setProperty(RETURN_POJO_PROPERTY_NAME, "true");
+
+        WorkflowJob p = j.jenkins.createProject(WorkflowJob.class, "p");
+        p.setDefinition(new CpsFlowDefinition(
+                "node {\n" +
+                        "  def json = readJSON( text: '{ \"key\": null }')\n" +
+                        "  assert json.key == null\n" +
+                        "}", true));
+        j.assertBuildStatusSuccess(p.scheduleBuild2(0));
+    }
+
+
+    @Test
+    public void returnPojoDeactivatedWithSystemProperty() throws Exception {
+        System.setProperty(RETURN_POJO_PROPERTY_NAME, "false");
+
+        WorkflowJob p = j.jenkins.createProject(WorkflowJob.class, "p");
+        p.setDefinition(new CpsFlowDefinition(
+                "node {\n" +
+                        "  def json = readJSON( text: '{ \"key\": null }')\n" +
+                        "  assert json.key.getClass().getName().startsWith('net.sf.json')\n" +
+                        "}", true));
+        j.assertBuildStatusSuccess(p.scheduleBuild2(0));
     }
 
 }

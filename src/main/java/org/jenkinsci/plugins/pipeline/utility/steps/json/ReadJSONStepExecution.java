@@ -25,6 +25,7 @@
 package org.jenkinsci.plugins.pipeline.utility.steps.json;
 
 import hudson.FilePath;
+
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -32,6 +33,7 @@ import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.jenkinsci.plugins.pipeline.utility.steps.AbstractFileOrTextStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 
@@ -86,7 +88,7 @@ public class ReadJSONStepExecution extends AbstractFileOrTextStepExecution<Objec
             json = JSONSerializer.toJSON(step.getText().trim());
         }
 
-        if (step.getReturnPojo()) {
+        if (ObjectUtils.defaultIfNull(step.getReturnPojo(), ReadJSONStep.RETURN_POJO_DEFAULT)) {
             return transformToJavaLangStructures(json);
         }
         return json;

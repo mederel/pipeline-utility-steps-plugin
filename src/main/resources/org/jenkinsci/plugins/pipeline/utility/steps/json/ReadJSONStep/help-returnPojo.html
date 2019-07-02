@@ -28,3 +28,17 @@
 	By default deactivated (<code>false</code>), and a JSON object (<code>JSONObject</code> or <code>JSONArray</code>
 	from json-lib) is returned.
 </p>
+<p>
+	Can be activated by default by either:
+</p>
+<ul>
+	<li>
+		set the following system property in your java start command:<br/>
+		<code><pre>
+-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true
+        </pre></code>
+	</li>
+	<li>
+		or define the environment variable <code>PIPELINE_UTILITY_JSON_RETURN_POJOS</code> with value <code>true</code>
+	</li>
+</ul>

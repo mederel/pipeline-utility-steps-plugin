@@ -48,3 +48,18 @@ props.each { key, value ->
 }
 	</pre></code>
 </p>
+<p>
+    If you want that readJSON to always behave as if returnPojo were true, i.e. that readJSON always returns
+    LinkedHashMap or ArrayList instead of JSONObject and JSONArray, you can either:
+</p>
+<ul>
+    <li>
+        set the following system property in your java start command:<br/>
+        <code><pre>
+-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true
+        </pre></code>
+    </li>
+    <li>
+        or define the environment variable <code>PIPELINE_UTILITY_JSON_RETURN_POJOS</code> with value <code>true</code>
+    </li>
+</ul>

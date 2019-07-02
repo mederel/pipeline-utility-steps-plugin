@@ -23,7 +23,8 @@
  */
 package org.jenkinsci.plugins.pipeline.utility.steps.json;
 
-import hudson.Extension;
+import javax.annotation.Nonnull;
+
 import org.jenkinsci.plugins.pipeline.utility.steps.AbstractFileOrTextStep;
 import org.jenkinsci.plugins.pipeline.utility.steps.AbstractFileOrTextStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -31,7 +32,7 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
+import hudson.Extension;
 
 /**
  * Reads a JSON file from the workspace.
@@ -39,8 +40,17 @@ import javax.annotation.Nonnull;
  * @author Nikolas Falco
  */
 public class ReadJSONStep extends AbstractFileOrTextStep {
+    /**
+     * If true POJO object will always be returned instead of the default net.sf.json.JSON objects. You can set this
+     * property with the System property
+     * <code>org.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo</code> or with an environment
+     * variable <code>PIPELINE_UTILITY_JSON_RETURN_POJOS</code>.
+     */
+    public static final boolean RETURN_POJO_DEFAULT =
+            Boolean.parseBoolean(System.getProperty(ReadJSONStep.class.getName() + ".returnPojo")) ||
+                    Boolean.parseBoolean(System.getenv("PIPELINE_UTILITY_JSON_RETURN_POJOS"));
 
-    protected boolean returnPojo;
+    protected Boolean returnPojo;
 
     @DataBoundConstructor
     public ReadJSONStep() {
@@ -74,10 +84,16 @@ public class ReadJSONStep extends AbstractFileOrTextStep {
      * Whether to return a pure Java POJO made of Map and List or the deserialized JSON object (from json-lib).
      * Default is JSON.
      *
+     * <p>
+     * Another way to activate the returning POJOs can be by setting the following system property:
+     * <code>-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true</code> in your Jenkins
+     * start script.
+     * </p>
+     *
      * @return whether to return a pure Java POJO made of Map and List or the deserialized JSON object (from json-lib).
      * Default is JSON.
      */
-    public boolean getReturnPojo() {
+    public Boolean getReturnPojo() {
         return returnPojo;
     }
 
@@ -85,11 +101,17 @@ public class ReadJSONStep extends AbstractFileOrTextStep {
      * Whether to return a pure Java POJO made of Map and List or the deserialized JSON object (from json-lib).
      * Default is JSON.
      *
+     * <p>
+     * Another way to activate the returning POJOs can be by setting the following system property:
+     * <code>-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true</code> in your Jenkins
+     * start script. If return Pojo
+     * </p>
+     *
      * @param returnPojo whether to return a pure Java POJO made of Map and List or the deserialized JSON object
      *                   (from json-lib). Default is JSON.
      */
     @DataBoundSetter
-    public void setReturnPojo(boolean returnPojo) {
+    public void setReturnPojo(Boolean returnPojo) {
         this.returnPojo = returnPojo;
     }
 
