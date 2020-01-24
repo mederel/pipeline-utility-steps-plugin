@@ -87,7 +87,8 @@ public class ReadJSONStep extends AbstractFileOrTextStep {
      * <p>
      * Another way to activate the returning POJOs can be by setting the following system property:
      * <code>-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true</code> in your Jenkins
-     * start script.
+     * start script or defining the environment variable <code>PIPELINE_UTILITY_JSON_RETURN_POJOS</code> with value
+     * <code>true</code>.
      * </p>
      *
      * @return whether to return a pure Java POJO made of Map and List or the deserialized JSON object (from json-lib).
@@ -104,7 +105,8 @@ public class ReadJSONStep extends AbstractFileOrTextStep {
      * <p>
      * Another way to activate the returning POJOs can be by setting the following system property:
      * <code>-Dorg.jenkinsci.plugins.pipeline.utility.steps.json.ReadJSONStep.returnPojo=true</code> in your Jenkins
-     * start script. If return Pojo
+     * start script or defining the environment variable <code>PIPELINE_UTILITY_JSON_RETURN_POJOS</code> with value
+     * <code>true</code>.
      * </p>
      *
      * @param returnPojo whether to return a pure Java POJO made of Map and List or the deserialized JSON object

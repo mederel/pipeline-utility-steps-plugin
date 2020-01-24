@@ -34,6 +34,7 @@ import java.io.StringReader;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.jenkinsci.plugins.pipeline.utility.steps.FilenameTestsUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -69,6 +70,7 @@ public class ReadJSONStepTest {
     @After
     public void tearDown() {
         System.clearProperty(RETURN_POJO_PROPERTY_NAME);
+        SystemUtil.
     }
 
     @Test
